@@ -48,7 +48,7 @@ public class Instance {
 		Edge[] edges = new Edge[numEdges];
 		List<List<Integer>> incidentEdges = new ArrayList<List<Integer>>(numNodes);		
 		for (int i = 0; i < numNodes; i++) {
-			incidentEdges.set(i, new LinkedList<Integer>());
+			incidentEdges.add(new LinkedList<Integer>());
 		}
 		
 		for (int i = 0; i < numEdges; i++) {

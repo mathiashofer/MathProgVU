@@ -26,5 +26,10 @@ public class Edge {
 	public int getWeight() {
 		return weight;
 	}
+	
+	@Override
+	public String toString() {
+		return v1 + " " + v2 + " " + weight;
+	}
 
 }
