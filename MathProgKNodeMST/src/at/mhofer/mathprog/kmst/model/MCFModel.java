@@ -1,12 +1,11 @@
 package at.mhofer.mathprog.kmst.model;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import at.mhofer.mathprog.kmst.data.Edge;
 import at.mhofer.mathprog.kmst.data.Instance;
+import at.mhofer.mathprog.kmst.data.TupleKeyHashMap;
 import ilog.concert.IloException;
 import ilog.concert.IloIntVar;
 import ilog.concert.IloLinearIntExpr;
@@ -15,13 +14,7 @@ import ilog.concert.IloNumVar;
 import ilog.concert.IloObjectiveSense;
 import ilog.cplex.IloCplex;
 
-/**
- * Single-Commodity-Flow formulation of k-Node MST
- * 
- * @author Mathias
- *
- */
-public class SCFModel implements Model {
+public class MCFModel implements Model {
 
 	private static final int ARTIFICIAL_ROOT = 0;
 
@@ -37,7 +30,7 @@ public class SCFModel implements Model {
 
 	private int k;
 
-	public SCFModel(Instance instance, int k) {
+	public MCFModel(Instance instance, int k) {
 		this.incidenceEdges = instance.getIncidentEdges();
 		this.edges = instance.getEdges();
 		this.invEdges = new Edge[instance.getNumEdges()];
@@ -60,13 +53,20 @@ public class SCFModel implements Model {
 		// Variables
 		IloIntVar[] y = cplex.boolVarArray(numNodes);
 		IloIntVar[] x = cplex.boolVarArray(numEdges);
-		IloNumVar[] f = cplex.numVarArray(numEdges, 0, Double.MAX_VALUE);
-		IloNumVar[] invf = cplex.numVarArray(numEdges, 0, Double.MAX_VALUE);
+		IloNumVar[][] f = new IloNumVar[numNodes][];
+		IloNumVar[][] invf = new IloNumVar[numNodes][];
 
-		Map<Edge, IloNumVar> edgeVarMap = new HashMap<Edge, IloNumVar>();
-		for (int i = 0; i < numEdges; i++) {
-			edgeVarMap.put(edges[i], f[i]);
-			edgeVarMap.put(invEdges[i], invf[i]);
+		for (int c = 1; c < numNodes; c++) {
+			f[c] = cplex.numVarArray(numEdges, 0, Double.MAX_VALUE);
+			invf[c] = cplex.numVarArray(numEdges, 0, Double.MAX_VALUE);
+		}
+
+		TupleKeyHashMap<Integer, Edge, IloNumVar> edgeVarMap = new TupleKeyHashMap<Integer, Edge, IloNumVar>();
+		for (int c = 1; c < numNodes; c++) {
+			for (int i = 0; i < numEdges; i++) {
+				edgeVarMap.put(c, edges[i], f[c][i]);
+				edgeVarMap.put(c, invEdges[i], invf[c][i]);
+			}
 		}
 
 		// Objective function
@@ -79,25 +79,33 @@ public class SCFModel implements Model {
 
 		// Constraints
 		// C1: send out commodities from root
-		IloLinearNumExpr c1 = cplex.linearNumExpr();
-		for (Edge e : outgoingEdges(ARTIFICIAL_ROOT)) {
-			c1.addTerm(edgeVarMap.get(e), 1);
+		for (int c = 1; c < numNodes; c++) {
+			IloLinearNumExpr c1 = cplex.linearNumExpr();
+			for (Edge e : outgoingEdges(ARTIFICIAL_ROOT)) {
+				c1.addTerm(edgeVarMap.get(c, e), 1);
+			}
+			cplex.addEq(c1, y[c], "C1");
 		}
-		cplex.addEq(c1, k, "C1");
 
 		// C2: for each of the selected nodes we consume one commodity and send
 		// the rest out, for all other nodes the difference is 0
-		for (int i = 1; i < numNodes; i++) {
-			IloLinearNumExpr c2 = cplex.linearNumExpr();
-			for (Edge e : outgoingEdges(i)) {
-				c2.addTerm(edgeVarMap.get(e), 1);
+		for (int c = 1; c < numNodes; c++) {
+			for (int i = 1; i < numNodes; i++) {
+				IloLinearNumExpr c2 = cplex.linearNumExpr();
+				for (Edge e : outgoingEdges(i)) {
+					c2.addTerm(edgeVarMap.get(c, e), 1);
+				}
+				for (Edge e : incomingEdges(i)) {
+					c2.addTerm(edgeVarMap.get(c, e), -1);
+				}
+				if (i == c) {
+					cplex.addEq(c2, cplex.prod(-1, y[i]), "C2");
+				} else {
+					cplex.addEq(c2, 0, "C2");
+				}
 			}
-			for (Edge e : incomingEdges(i)) {
-				c2.addTerm(edgeVarMap.get(e), -1);
-			}
-			cplex.addEq(c2, cplex.prod(-1, y[i]), "C2");
 		}
-
+		
 		// C3: if we select some edge e = (i,j) then y_i and y_j has to be 1
 		for (int i = 0; i < numEdges; i++) {
 			Edge e = edges[i];
@@ -108,22 +116,21 @@ public class SCFModel implements Model {
 		cplex.addLe(cplex.sum(y), k + 1);
 
 		// C4: control the flow on edge i, i.e. 0 if we do not choose edge i
-		for (int i = 0; i < numEdges; i++) {
-			if (i < numNodes - 1) {
-				// artificial edges
-				cplex.addLe(f[i], cplex.prod(k, x[i]), "C4");
-			} else {
-				cplex.addLe(f[i], cplex.prod(k - 1, x[i]), "C4");
+		for (int c = 1; c < k; c++) {
+			for (int i = 0; i < numEdges; i++) {
+				cplex.addLe(f[c][i], x[i], "C4");
 			}
 		}
 
 		// C5: control the flow on edge i, i.e. 0 if we do not choose edge i
-		for (int i = 0; i < numEdges; i++) {
-			if (i < numNodes - 1) {
-				// artificial edges
-				cplex.addEq(invf[i], 0, "C4");
-			} else {
-				cplex.addLe(invf[i], cplex.prod(k - 1, x[i]), "C5");
+		for (int c = 1; c < k; c++) {
+			for (int i = 0; i < numEdges; i++) {
+				if (i < numNodes - 1) {
+					// artificial edges
+					cplex.addEq(invf[c][i], 0, "C5");
+				} else {
+					cplex.addLe(invf[c][i], x[i], "C5");
+				}
 			}
 		}
 
@@ -187,5 +194,4 @@ public class SCFModel implements Model {
 		System.out.println(cplex.getObjValue());
 		return ret;
 	}
-
 }
