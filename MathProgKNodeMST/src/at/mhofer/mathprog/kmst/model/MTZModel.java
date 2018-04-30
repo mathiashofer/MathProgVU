@@ -1,5 +1,6 @@
 package at.mhofer.mathprog.kmst.model;
 
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -138,6 +139,12 @@ public class MTZModel implements Model {
 		boolean ret = cplex.solve();
 		System.out.println(cplex.getObjValue());
 		return ret;
+	}
+
+	@Override
+	public void setOut(OutputStream out) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,0 +1,17 @@
+Tried aggregator 2 times.
+MIP Presolve eliminated 18483 rows and 1463942 columns.
+Aggregator did 72059 substitutions.
+Reduced MIP has 395762 rows, 375300 columns, and 1503418 nonzeros.
+Reduced MIP has 3600 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 4.16 sec. (2260.82 ticks)
+Probing time = 1.33 sec. (227.87 ticks)
+Tried aggregator 1 time.
+MIP Presolve eliminated 118 rows and 59 columns.
+Reduced MIP has 395644 rows, 375241 columns, and 1503182 nonzeros.
+Reduced MIP has 3600 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 2.20 sec. (1058.00 ticks)
+Probing time = 0.83 sec. (99.16 ticks)
+Clique table members: 6301.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 4 threads.

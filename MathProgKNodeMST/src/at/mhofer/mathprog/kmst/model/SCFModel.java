@@ -1,5 +1,6 @@
 package at.mhofer.mathprog.kmst.model;
 
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -137,6 +138,11 @@ public class SCFModel implements Model {
 			c6.addTerm(x[i], 1);
 		}
 		cplex.addLe(c6, 1, "C7");
+	}
+
+	@Override
+	public void setOut(OutputStream out) {
+		cplex.setOut(out);
 	}
 
 	/**

@@ -1,7 +1,10 @@
 package at.mhofer.mathprog.kmst.model;
 
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import at.mhofer.mathprog.kmst.data.Edge;
 import at.mhofer.mathprog.kmst.data.Instance;
@@ -62,10 +65,13 @@ public class MCFModel implements Model {
 		}
 
 		TupleKeyHashMap<Integer, Edge, IloNumVar> edgeVarMap = new TupleKeyHashMap<Integer, Edge, IloNumVar>();
+		Map<Edge,Integer> edgeIndizes = new HashMap<Edge,Integer>();
 		for (int c = 1; c < numNodes; c++) {
 			for (int i = 0; i < numEdges; i++) {
 				edgeVarMap.put(c, edges[i], f[c][i]);
 				edgeVarMap.put(c, invEdges[i], invf[c][i]);
+				edgeIndizes.put(edges[i], i);
+				edgeIndizes.put(invEdges[i], i);
 			}
 		}
 
@@ -87,8 +93,7 @@ public class MCFModel implements Model {
 			cplex.addEq(c1, y[c], "C1");
 		}
 
-		// C2: for each of the selected nodes we consume one commodity and send
-		// the rest out, for all other nodes the difference is 0
+		// C2: each one of the selected nodes must consume its destined commodity, the rest must be 0
 		for (int c = 1; c < numNodes; c++) {
 			for (int i = 1; i < numNodes; i++) {
 				IloLinearNumExpr c2 = cplex.linearNumExpr();
@@ -99,12 +104,14 @@ public class MCFModel implements Model {
 					c2.addTerm(edgeVarMap.get(c, e), -1);
 				}
 				if (i == c) {
-					cplex.addEq(c2, cplex.prod(-1, y[i]), "C2");
+					cplex.addEq(c2, cplex.negative(y[c]), "C2");
 				} else {
 					cplex.addEq(c2, 0, "C2");
 				}
 			}
 		}
+
+		 cplex.addEq(y[0], 1);
 		
 		// C3: if we select some edge e = (i,j) then y_i and y_j has to be 1
 		for (int i = 0; i < numEdges; i++) {
@@ -144,6 +151,11 @@ public class MCFModel implements Model {
 			c6.addTerm(x[i], 1);
 		}
 		cplex.addLe(c6, 1, "C7");
+	}
+
+	@Override
+	public void setOut(OutputStream out) {
+		cplex.setOut(out);
 	}
 
 	/**

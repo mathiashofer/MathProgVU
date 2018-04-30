@@ -10,6 +10,7 @@ public class Edge {
 
 	public Edge(int v1, int v2, int weight) {
 		super();
+		assert v1 != v2;
 		this.v1 = v1;
 		this.v2 = v2;
 		this.weight = weight;

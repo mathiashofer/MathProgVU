@@ -1,5 +1,7 @@
 package at.mhofer.mathprog.kmst.model;
 
+import java.io.OutputStream;
+
 import ilog.concert.IloException;
 
 /**
@@ -11,6 +13,8 @@ import ilog.concert.IloException;
 public interface Model {
 
 	public void build() throws IloException;
+	
+	public void setOut(OutputStream out);
 	
 	public boolean solve() throws IloException;
 	
