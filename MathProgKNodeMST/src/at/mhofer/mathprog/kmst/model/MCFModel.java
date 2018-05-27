@@ -13,6 +13,7 @@ import ilog.concert.IloException;
 import ilog.concert.IloIntVar;
 import ilog.concert.IloLinearIntExpr;
 import ilog.concert.IloLinearNumExpr;
+import ilog.concert.IloNumExpr;
 import ilog.concert.IloNumVar;
 import ilog.concert.IloObjectiveSense;
 import ilog.cplex.IloCplex;
@@ -44,8 +45,6 @@ public class MCFModel implements Model {
 		this.numEdges = instance.getNumEdges();
 		this.numNodes = instance.getNumNodes();
 
-		// add 1, since we have the artificial node and therefore an additional
-		// edge
 		this.k = k;
 	}
 
@@ -65,7 +64,7 @@ public class MCFModel implements Model {
 		}
 
 		TupleKeyHashMap<Integer, Edge, IloNumVar> edgeVarMap = new TupleKeyHashMap<Integer, Edge, IloNumVar>();
-		Map<Edge,Integer> edgeIndizes = new HashMap<Edge,Integer>();
+		Map<Edge, Integer> edgeIndizes = new HashMap<Edge, Integer>();
 		for (int c = 1; c < numNodes; c++) {
 			for (int i = 0; i < numEdges; i++) {
 				edgeVarMap.put(c, edges[i], f[c][i]);
@@ -85,17 +84,18 @@ public class MCFModel implements Model {
 
 		// Constraints
 		// C1: send out commodities from root
-		for (int c = 1; c < numNodes; c++) {
-			IloLinearNumExpr c1 = cplex.linearNumExpr();
-			for (Edge e : outgoingEdges(ARTIFICIAL_ROOT)) {
-				c1.addTerm(edgeVarMap.get(c, e), 1);
-			}
-			cplex.addEq(c1, y[c], "C1");
-		}
+//		 for (int c = 1; c < numNodes; c++) {
+//		 IloLinearNumExpr c1 = cplex.linearNumExpr();
+//		 for (Edge e : outgoingEdges(ARTIFICIAL_ROOT)) {
+//		 c1.addTerm(edgeVarMap.get(c, e), 1);
+//		 }
+//		 cplex.addEq(c1, y[c], "C1");
+//		 }
 
-		// C2: each one of the selected nodes must consume its destined commodity, the rest must be 0
+		// C2: each one of the selected nodes must consume its destined
+		// commodity, the rest must be 0
 		for (int c = 1; c < numNodes; c++) {
-			for (int i = 1; i < numNodes; i++) {
+			for (int i = 0; i < numNodes; i++) {
 				IloLinearNumExpr c2 = cplex.linearNumExpr();
 				for (Edge e : outgoingEdges(i)) {
 					c2.addTerm(edgeVarMap.get(c, e), 1);
@@ -103,7 +103,9 @@ public class MCFModel implements Model {
 				for (Edge e : incomingEdges(i)) {
 					c2.addTerm(edgeVarMap.get(c, e), -1);
 				}
-				if (i == c) {
+				if (i == ARTIFICIAL_ROOT) {
+					cplex.addEq(c2, y[c], "C1");
+				} else if (i == c) {
 					cplex.addEq(c2, cplex.negative(y[c]), "C2");
 				} else {
 					cplex.addEq(c2, 0, "C2");
@@ -111,21 +113,41 @@ public class MCFModel implements Model {
 			}
 		}
 
-		 cplex.addEq(y[0], 1);
-		
+//		 cplex.addEq(y[0], 1);
+
+		for (int i = 0; i < numNodes; i++) {
+			IloLinearNumExpr c = cplex.linearNumExpr();
+			for (Edge e : outgoingEdges(i)) {
+				int index = edgeIndizes.get(e);
+				c.addTerm(1, x[index]);
+			}
+			cplex.addGe(c, cplex.prod(2, y[i]));
+		}
+
 		// C3: if we select some edge e = (i,j) then y_i and y_j has to be 1
-		for (int i = 0; i < numEdges; i++) {
+		for (int i = numNodes - 1; i < numEdges; i++) {
 			Edge e = edges[i];
 			cplex.addLe(x[i], y[e.getV2()], "C3");
-			cplex.addLe(x[i], y[e.getV1()], "C3");
+			 cplex.addLe(x[i], y[e.getV1()], "C3");
 		}
 
 		cplex.addLe(cplex.sum(y), k + 1);
 
 		// C4: control the flow on edge i, i.e. 0 if we do not choose edge i
 		for (int c = 1; c < k; c++) {
+			for (int i = 1; i < numEdges; i++) {
+				cplex.addLe(cplex.sum(invf[c][i], f[c][i]), x[i], "C4");
+			}
+		}
+		
+		for (int c = 1; c < k; c++) {
 			for (int i = 0; i < numEdges; i++) {
-				cplex.addLe(f[c][i], x[i], "C4");
+//				if (i < numNodes - 1) {
+//					// artificial edges
+//					cplex.addEq(f[c][i], 0, "C5");
+//				} else {
+					cplex.addLe(f[c][i], x[i], "C5");
+//				}
 			}
 		}
 
