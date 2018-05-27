@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="file:/C:/Program%20Files/IBM/ILOG/CPLEX_Studio127/doc/html/en-US/refjavacplex/html/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jgrapht-core-1.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
