@@ -1,0 +1,59 @@
+Lazy constraint(s) or lazy constraint callback is present.
+    Disabling dual reductions (CPX_PARAM_REDUCE) in presolve.
+    Disabling non-linear reductions (CPX_PARAM_PRELINEAR) in presolve.
+         Disabling repeat represolve because of lazy constraint/incumbent callback.
+Tried aggregator 1 time.
+MIP Presolve eliminated 200 rows and 200 columns.
+MIP Presolve modified 1598 coefficients.
+Reduced MIP has 2599 rows, 2797 columns, and 21587 nonzeros.
+Reduced MIP has 2797 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (14.45 ticks)
+Probing time = 0.00 sec. (4.39 ticks)
+Clique table members: 1000.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: traditional branch-and-cut.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.03 sec. (42.74 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
+
+      0     0     1891.5000    12                   1891.5000     1668         
+      0     0     1947.0000    30                     Cuts: 8     1688         
+      0     0     1966.8462    40                    Cuts: 10     1697         
+      0     0     1973.5641    83                 ZeroHalf: 3     1700         
+      0     0     1973.5641    72                 ZeroHalf: 1     1701         
+      0     0     1973.5641    86                 ZeroHalf: 1     1703         
+      0     0     1973.5641    78                 ZeroHalf: 1     1705         
+      0     0     1974.4103    82                 ZeroHalf: 1     1709         
+      0     0     1974.4103    86                 ZeroHalf: 1     1710         
+*     0+    0                        19760.0000     1974.4103            90.01%
+      0     2     1974.4103    79    19760.0000     1974.5000     1710   90.01%                        0             0
+Elapsed time = 0.98 sec. (639.59 ticks, tree = 0.01 MB, solutions = 1)
+      9    11     2012.0000    24    19760.0000     1980.3333     1958   89.98%            x794 U      9      8      7
+*    10+   10                         2879.0000     1980.3333            31.21%
+     20    22     2117.6765    42     2879.0000     1980.3333     2209   31.21%            x940 D     20     19     16
+     27    29     2160.0000    27     2879.0000     1980.3333     2399   31.21%            x303 D     27     26     21
+*    30+   30                         2241.0000     1980.3333            11.63%
+*    32    32      integral     0     2215.0000     1980.3333     2578   10.59%
+*    53    46      integral     0     2186.0000     1980.3333     2959    9.41%
+     61    52     2029.1667    34     2186.0000     1984.2564     3169    9.23%           x2095 D     61     60      9
+*    70+   35                         2096.0000     1984.3333             5.33%
+    120    65     2018.4955    59     2096.0000     1988.5556     4143    5.13%            x961 D    120    119      8
+*   168    71      integral     0     2071.0000     1991.7778     4827    3.83%
+    190    85     2007.2000    48     2071.0000     1995.5370     5013    3.64%           x2074 D    190    189     20
+    305   136        cutoff           2071.0000     2001.0000     6284    3.38%            x729 U    305    304     13
+*   321   142      integral     0     2068.0000     2001.0364     6573    3.24%
+    421   176     2043.0000    10     2068.0000     2008.8889     8141    2.86%            x961 D    421    419      7
+    573   194     2034.0000    32     2068.0000     2023.2143    10019    2.17%            x978 U    573    572     12
+
+Zero-half cuts applied:  7
+Gomory fractional cuts applied:  3
+User cuts applied:  44
+
+Root node processing (before b&c):
+  Real time             =    0.98 sec. (639.66 ticks)
+Sequential b&c:
+  Real time             =    4.80 sec. (3154.66 ticks)
+                          ------------
+Total (root+branch&cut) =    5.78 sec. (3794.32 ticks)

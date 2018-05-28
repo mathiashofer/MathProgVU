@@ -1,0 +1,39 @@
+Lazy constraint(s) or lazy constraint callback is present.
+    Disabling dual reductions (CPX_PARAM_REDUCE) in presolve.
+    Disabling non-linear reductions (CPX_PARAM_PRELINEAR) in presolve.
+         Disabling repeat represolve because of lazy constraint/incumbent callback.
+Tried aggregator 1 time.
+MIP Presolve eliminated 100 rows and 100 columns.
+MIP Presolve modified 600 coefficients.
+Reduced MIP has 1002 rows, 1100 columns, and 6746 nonzeros.
+Reduced MIP has 1100 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (4.53 ticks)
+Probing time = 0.00 sec. (2.16 ticks)
+Clique table members: 401.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: traditional branch-and-cut.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.02 sec. (10.56 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
+
+      0     0     1187.6667    16                   1187.6667      609         
+      0     0     1218.0000    30                     Cuts: 8      619         
+      0     0     1218.0000    30                 ZeroHalf: 1      625         
+      0     0     1218.0000    30                 ZeroHalf: 4      626         
+*     0+    0                         1515.0000     1218.0000            19.60%
+      0     2     1218.0000    30     1515.0000     1218.0000      626   19.60%                        0             0
+Elapsed time = 0.20 sec. (128.52 ticks, tree = 0.01 MB, solutions = 1)
+*     2     2      integral     0     1235.0000     1222.7500      651    0.99%
+
+Zero-half cuts applied:  5
+Gomory fractional cuts applied:  2
+User cuts applied:  4
+
+Root node processing (before b&c):
+  Real time             =    0.20 sec. (128.50 ticks)
+Sequential b&c:
+  Real time             =    0.03 sec. (21.15 ticks)
+                          ------------
+Total (root+branch&cut) =    0.23 sec. (149.65 ticks)

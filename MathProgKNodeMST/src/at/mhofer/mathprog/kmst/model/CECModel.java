@@ -6,11 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.SpringLayout.Constraints;
+
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import at.mhofer.mathprog.kmst.data.Edge;
 import at.mhofer.mathprog.kmst.data.Instance;
@@ -36,9 +38,18 @@ public class CECModel implements Model {
 
 	private int k;
 
+	/**
+	 * Edges
+	 */
 	private IloIntVar[] x;
 
+	/**
+	 * Directed arcs
+	 */
+	private IloIntVar[] a;
+
 	private Map<Edge, IloIntVar> edgeVarMap;
+	private Map<Edge, IloIntVar> arcEdgeMap;
 
 	public CECModel(Instance instance, int k) {
 		this.incidenceEdges = instance.getIncidentEdges();
@@ -57,13 +68,18 @@ public class CECModel implements Model {
 	public void build() throws IloException {
 		cplex = new IloCplex();
 		cplex.use(new CycleElimination());
+		cplex.use(new FractionalCuts());
 
 		this.x = cplex.boolVarArray(numEdges);
+		this.a = cplex.boolVarArray(numEdges * 2);
 
 		this.edgeVarMap = new HashMap<Edge, IloIntVar>();
+		this.arcEdgeMap = new HashMap<Edge, IloIntVar>();
 		for (int i = 0; i < numEdges; i++) {
-			edgeVarMap.put(edges[i], x[i]);
-			edgeVarMap.put(invEdges[i], x[i]);
+			edgeVarMap.put(edges[i], a[i]);
+			edgeVarMap.put(invEdges[i], a[i + numEdges]);
+			arcEdgeMap.put(edges[i], x[i]);
+			arcEdgeMap.put(invEdges[i], x[i]);
 		}
 
 		// Objective function
@@ -80,19 +96,29 @@ public class CECModel implements Model {
 			for (Edge in : incomingEdges(i)) {
 				inSum.addTerm(1, edgeVarMap.get(in));
 			}
+
 			for (Edge out : outgoingEdges(i)) {
 				cplex.addGe(inSum, edgeVarMap.get(out));
 			}
 		}
 
+		for (int i = 0; i < numEdges; i++) {
+			cplex.addLe(cplex.sum(a[i], a[i + numEdges]), x[i]);
+		}
+
 		// C6: choose k edges and therefore k+1 nodes, which leads to k nodes
 		// without the artificial root node
-		cplex.addEq(cplex.sum(x), k, "C6");
+		cplex.addEq(cplex.sum(a), k, "C6");
+		
+		// backarcs to root = 0
+		for (int i = 0; i < numNodes - 1; i++){
+			cplex.addEq(0, a[i + numEdges]);
+		}
 
-		// C7: take only one of the artificial 0-weight edges
+		// C7: take only one of the artificial 0-weight arcs
 		IloLinearIntExpr c6 = cplex.linearIntExpr();
 		for (int i = 0; i < numNodes - 1; i++) {
-			c6.addTerm(x[i], 1);
+			c6.addTerm(a[i], 1);
 		}
 		cplex.addLe(c6, 1, "C7");
 	}
@@ -150,52 +176,74 @@ public class CECModel implements Model {
 		}
 		return outgoingEdges;
 	}
-
-	private class CycleElimination extends IloCplex.LazyConstraintCallback {
+	
+	private class FractionalCuts extends IloCplex.UserCutCallback {
 
 		@Override
 		protected void main() throws IloException {
-			double[] values = this.getValues(x);
-			Graph<Integer, Edge> graph = new DefaultUndirectedWeightedGraph<>(Edge.class);
+			//TODO
+		}
+		
+	}
 
-			for (int i = 0; i < numNodes; i++) {
+	private class CycleElimination extends IloCplex.LazyConstraintCallback {
+
+		private boolean hasVal(double val, int shouldBe) throws IloException {
+			double e = cplex.getParam(IloCplex.Param.MIP.Tolerances.Integrality);
+			return shouldBe - e <= val && val <= shouldBe + e;
+		}
+		
+		private int toBinary(double val) throws IloException {
+			if (hasVal(val, 1)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+
+		@Override
+		protected void main() throws IloException {
+			double[] values = this.getValues(a);
+			Graph<Integer, Edge> graph = new DefaultDirectedWeightedGraph<Integer, Edge>(Edge.class);
+
+			for (int i = 1; i < numNodes; i++) {
 				graph.addVertex(i);
 			}
 
-			for (int i = 0; i < numEdges; i++) {
-				Edge e = edges[i];
-				graph.addEdge(e.getV1(), e.getV2(), e);
-				graph.setEdgeWeight(edges[i], 1 - values[i]);
-				
-//				Edge inve = invEdges[i];
-//				graph.addEdge(inve.getV1(), inve.getV2(), inve);
-//				graph.setEdgeWeight(invEdges[i], 1 - values[i]);
+			List<Edge> generatedEdges = new LinkedList<Edge>();
+			
+			for (int i = numNodes - 1; i < numEdges; i++) {
+				if (hasVal(values[i], 1) || hasVal(values[i + numEdges], 0)) {
+					Edge e = edges[i];
+					graph.addEdge(e.getV1(), e.getV2(), e);
+					graph.setEdgeWeight(edges[i], 1 - toBinary(values[i]));
+					generatedEdges.add(e);
+				}
+
+				if (hasVal(values[i + numEdges], 1) || hasVal(values[i], 0)) {
+					Edge inve = invEdges[i];
+					graph.addEdge(inve.getV1(), inve.getV2(), inve);
+					graph.setEdgeWeight(invEdges[i], 1 - toBinary(values[i + numEdges]));
+					generatedEdges.add(inve);
+				}
 			}
 
 			ShortestPathAlgorithm<Integer, Edge> dijkstra = new DijkstraShortestPath<Integer, Edge>(graph);
-			for (int i = 0; i < numEdges; i++) {
-				Edge e = edges[i];
-				graph.removeEdge(e);
+			for (Edge e: generatedEdges) {
 				GraphPath<Integer, Edge> path = dijkstra.getPath(e.getV2(), e.getV1());
-				if (path == null) {
-					path = dijkstra.getPath(e.getV1(), e.getV2());
-				}
-				graph.addEdge(e.getV1(), e.getV2(), e);
-				graph.setEdgeWeight(e, 1 - values[i]);
-				if (path != null) {					
+
+				if (path != null) {
 					double pathWeight = path.getWeight();
 					double edgeWeight = graph.getEdgeWeight(e);
 					List<Edge> pathEdges = path.getEdgeList();
-					if (pathWeight + edgeWeight < 1 && pathEdges.size() > 1) {
+					if (pathWeight + toBinary(edgeWeight) < 1) {
 						IloLinearIntExpr sum = cplex.linearIntExpr();
 						for (Edge pathEdge : pathEdges) {
-							sum.addTerm(1, edgeVarMap.get(pathEdge));
+							sum.addTerm(1, arcEdgeMap.get(pathEdge));
 						}
-						sum.addTerm(1, edgeVarMap.get(e));
+						sum.addTerm(1, arcEdgeMap.get(e));
 
 						this.add(cplex.le(sum, pathEdges.size()));
-
-//						break;
 					}
 				}
 			}

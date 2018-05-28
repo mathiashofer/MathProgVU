@@ -1,0 +1,74 @@
+Lazy constraint(s) or lazy constraint callback is present.
+    Disabling dual reductions (CPX_PARAM_REDUCE) in presolve.
+    Disabling non-linear reductions (CPX_PARAM_PRELINEAR) in presolve.
+         Disabling repeat represolve because of lazy constraint/incumbent callback.
+Tried aggregator 1 time.
+MIP Presolve eliminated 200 rows and 200 columns.
+MIP Presolve modified 1598 coefficients.
+Reduced MIP has 2599 rows, 2797 columns, and 21587 nonzeros.
+Reduced MIP has 2797 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (14.45 ticks)
+Probing time = 0.00 sec. (4.39 ticks)
+Clique table members: 1000.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: traditional branch-and-cut.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.05 sec. (39.63 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
+
+      0     0     6562.5000    22                   6508.0000     1616         
+      0     0     6563.5000    24                 ZeroHalf: 1     1617         
+      0     0     6592.5000    16                    Fract: 1     1639         
+      0     0     6600.5000    14                 ZeroHalf: 2     1640         
+      0     0     6602.5000    24                 ZeroHalf: 1     1644         
+      0     0     6604.6667    22                 ZeroHalf: 2     1645         
+      0     0     6605.0000    22                 ZeroHalf: 8     1646         
+      0     0     6610.5000    20                 ZeroHalf: 3     1659         
+      0     0     6615.0000    26                 ZeroHalf: 1     1662         
+      0     0     6615.5000    30                 ZeroHalf: 2     1665         
+      0     0     6616.6667    40                 ZeroHalf: 2     1668         
+      0     0     6617.0000    40                 ZeroHalf: 4     1672         
+      0     0     6620.0000    30                 ZeroHalf: 3     1673         
+      0     0     6620.0000    24                 ZeroHalf: 3     1676         
+      0     0     6620.0000    12                 ZeroHalf: 1     1677         
+      0     2     6620.0000    20                   6620.0000     1677                                 0             0
+Elapsed time = 3.06 sec. (1610.52 ticks, tree = 0.01 MB, solutions = 0)
+      4     6     6675.5000    37                   6624.0000     1986                     x969 D      4      3      4
+     28    30     6879.0000     6                   6624.0000     2764                     x820 D     28     26     23
+     34    36     6934.2500    40                   6624.0000     3082                     x791 D     34     33     28
+     40    42     6940.3333    44                   6624.0000     3624                     x394 U     40     39     32
+*    43    43      integral     0     6967.0000     6624.0000     3903    4.92%
+*    68    57      integral     0     6947.0000     6630.0000     4332    4.56%
+     70    57     6659.5000    32     6947.0000     6633.0000     4381    4.52%            x734 U     70      5      5
+*    95    75      integral     0     6904.0000     6633.0000     4611    3.93%
+*    96    74      integral     0     6901.0000     6633.0000     4620    3.88%
+    113    91     6762.2500    38     6901.0000     6635.0000     4911    3.85%           x2000 U    113    112     22
+*   117    69      integral     0     6792.0000     6635.0000     4949    2.31%
+    160    93     6741.0000    22     6792.0000     6635.3333     5365    2.31%            x936 U    160    158     15
+    212   136     6781.3000    59     6792.0000     6636.0000     5746    2.30%           x1135 D    212    211     39
+    291   197     6751.8750    72     6792.0000     6638.5000     6356    2.26%            x874 D    291    290     26
+    619   460     6742.5000    46     6792.0000     6645.0000     8583    2.16%            x681 U    619    618     15
+Elapsed time = 14.67 sec. (5081.72 ticks, tree = 0.87 MB, solutions = 5)
+*   725   421      integral     0     6765.0000     6645.0000     9604    1.77%
+    961   613     6679.0000    20     6765.0000     6659.0000    11603    1.57%            x763 U    961    960     12
+*  1147   690      integral     0     6756.0000     6663.0000    12939    1.38%
+   1390   854     6724.5000    14     6756.0000     6669.5000    15115    1.28%            x656 D   1390   1189     17
+   1848  1149     6731.4444    61     6756.0000     6677.0000    19527    1.17%            x564 U   1848   1846     23
+*  1977   384      integral     0     6715.0000     6679.0000    20892    0.54%
+*  2085   376      integral     0     6714.0000     6682.5000    22110    0.47%
+   2269   358     6710.5000    36     6714.0000     6689.5000    23806    0.36%            x564 N   2269   2267     24
+*  2450   111      integral     0     6705.0000     6698.5000    25528    0.10%            x236 U   2450   1961     27
+
+Cover cuts applied:  1
+Zero-half cuts applied:  16
+Gomory fractional cuts applied:  1
+User cuts applied:  243
+
+Root node processing (before b&c):
+  Real time             =    3.06 sec. (1610.76 ticks)
+Sequential b&c:
+  Real time             =   21.59 sec. (7964.51 ticks)
+                          ------------
+Total (root+branch&cut) =   24.66 sec. (9575.27 ticks)

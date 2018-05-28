@@ -1,0 +1,43 @@
+Lazy constraint(s) or lazy constraint callback is present.
+    Disabling dual reductions (CPX_PARAM_REDUCE) in presolve.
+    Disabling non-linear reductions (CPX_PARAM_PRELINEAR) in presolve.
+         Disabling repeat represolve because of lazy constraint/incumbent callback.
+Tried aggregator 1 time.
+MIP Presolve eliminated 70 rows and 70 columns.
+MIP Presolve modified 301 coefficients.
+Reduced MIP has 642 rows, 710 columns, and 4141 nonzeros.
+Reduced MIP has 710 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (3.53 ticks)
+Probing time = 0.00 sec. (1.16 ticks)
+Clique table members: 404.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: traditional branch-and-cut.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (5.38 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
+
+      0     0     2882.6667    41                   2882.6667      410         
+      0     0     3178.0000    10                    Cuts: 21      479         
+      0     0     3178.0000    21                   Covers: 1      480         
+      0     0     3224.4286    19                     Cuts: 4      483         
+      0     0     3224.4286    37                     Cuts: 5      485         
+*     0+    0                        14910.0000     3224.4286            78.37%
+*     0+    0                        13427.0000     3224.4286            75.99%
+      0     2     3227.1667    54    13427.0000     3238.6667      485   75.88%                        0             0
+Elapsed time = 0.22 sec. (149.41 ticks, tree = 0.01 MB, solutions = 2)
+*     4     3      integral     0     3292.0000     3245.0000      548    1.43%
+
+Implied bound cuts applied:  7
+Zero-half cuts applied:  7
+Lift and project cuts applied:  2
+Gomory fractional cuts applied:  6
+User cuts applied:  7
+
+Root node processing (before b&c):
+  Real time             =    0.22 sec. (149.42 ticks)
+Sequential b&c:
+  Real time             =    0.08 sec. (60.94 ticks)
+                          ------------
+Total (root+branch&cut) =    0.30 sec. (210.36 ticks)
