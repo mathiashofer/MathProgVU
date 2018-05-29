@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage[top=1.5in, bottom=2in, left=1.5in, right=1.5in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{hhline}
+
+\title{Mathematical Programming\\Programming Exercise Report 2}
+\author{Mathias Hofer (01226806)}
+\date{May 2018}
+
+\begin{document}
+\maketitle
+
+\section{Model}
+Objective function
+\[\text{min } \Sigma_{e \in E} w_e x_e\]
+
+\noindent
+Make sure that we have a connected tree, thus we only select arcs from nodes which have some selected incoming arc.
+\[\Sigma_{(i,j) \in \delta^-(j)} a_{i j} \ge a_{j k} \tag*{$\forall j \in V$, $\forall (j,k) \in \delta^+(j)$}\]
+
+\noindent
+Linking constraints for arc and edge variables, which also ensure that we at most select one arc between all adjacent nodes
+\[a_{i j} + a_{j i} \leq x_e \tag*{$\forall e=(i,j) \in E$}\]
+
+\noindent
+Make sure that we select $k$ arcs
+\[\Sigma_{(i,j) \in A} a_{i j} = k\]
+
+\noindent
+Make sure that we do not select any arc back to the artificial root node
+\[a_{i 0} = 0 \tag*{$\forall i \in V$}\]
+
+\noindent
+Make sure that we only select one of the artificial zero-weight arcs from the root node
+\[\Sigma_{(0,i) \in \delta^+(0)} a_{0 i} \le 1\]
+
+\noindent
+Cycle elimination constraints
+\[\Sigma_{e \in C} x_e \leq |C| - 1 \tag*{$\forall C \subseteq E$, $|C| \geq 2$, $C$ forms a cycle}\]
+
+\noindent
+Edge selection variables
+\[x_e \in \{0, 1\} \tag*{$e \in E$}\]
+
+\noindent
+Arc selection variables
+\[a_{i j} \in \{0, 1\} \tag*{$(i,j) \in A$}\]
+
+\section{Results}
+
+\begin{table}[h!]
+	\centering
+	\label{tab:scf}
+	\begin{tabular}{l|l|l|l|l|l|l}
+		\textbf{}           & $\mathbf{|V|}$      	& \textbf{K} 	& \textbf{Objective} & \textbf{Runtime in Seconds} & \textbf{B\&B Nodes} & \textbf{User Cuts} \\ \hline
+		\multirow{2}{*}{g01}& \multirow{2}{*}{10} 	& 2          	& 46                 & 0.09                        & 0             & 0                          \\
+							&                   	& 5       		& 447                & 0.02                        & 0             & 0                         \\ \hline
+		\multirow{2}{*}{g02}& \multirow{2}{*}{20} 	& 4          	& 373                & 0.05                        & 0             & 0                          \\
+							&                   	& 10        	& 1390               & 0.08                        & 0             & 2                          \\ \hline
+		\multirow{2}{*}{g03}& \multirow{2}{*}{50} 	& 10         	& 725                & 0.03                        & 0             & 1                          \\
+							&                   	& 25         	& 3074               & 0.39                        & 32             & 17                         \\ \hline
+		\multirow{2}{*}{g04}& \multirow{2}{*}{70} 	& 14         	& 909                & 0.20                        & 12            & 6                          \\
+							&                   	& 35         	& 3292               & 0.28                        & 4             & 11                          \\ \hline
+		\multirow{2}{*}{g05}& \multirow{2}{*}{100} 	& 20         	& 1235               & 0.25                        & 2             & 7                          \\
+							&                   	& 50         	& 4898               & 1.16                        & 341             & 50                         \\ \hline
+		\multirow{2}{*}{g06}& \multirow{2}{*}{200} 	& 40         	& 2068               & 6.58                        & 1081          & 45                           \\
+							&                   	& 100        	& 6705               & 11.22                       & 1,348        & 138                           \\ \hline
+		\multirow{2}{*}{g07}& \multirow{2}{*}{300} 	& 60         	& 1335               & 5.08                       & 24         & 8                           \\
+							&                   	& 150        	& 4534               & 19.25                      & 64         & 35                          \\ \hline
+		\multirow{2}{*}{g08}& \multirow{2}{*}{400} 	& 80         	& 1620               & 11.56                      & 8        	& 13                           \\
+							&                   	& 200        	& 5787               & 182.39                     & 5,505     & 252                            
+	\end{tabular}
+	\caption{Results on a Intel Core i7-5500U 2.4GHz}
+\end{table}
+
+\section{Separation Method}
+
+
+\section{Interpretation of Results}
+
+
+\end{document}

@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.SpringLayout.Constraints;
-
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
@@ -217,37 +215,15 @@ public class CECModel implements Model {
 							sum.addTerm(1, arcEdgeMap.get(pathEdge));
 						}
 						sum.addTerm(1, arcEdgeMap.get(e));
-						// this.addLocal(cplex.le(sum, pathEdges.size()));
 						this.add(cplex.le(sum, pathEdges.size()), IloCplex.CutManagement.UseCutFilter);
 						counter++;
-						// break;
-						if (counter > 5)
+						if (counter > 5) {
 							break;
+						}
 					}
 				}
 			}
 
-		}
-
-		private boolean hasVal(double val, int shouldBe) throws IloException {
-			double e = cplex.getParam(IloCplex.Param.MIP.Tolerances.Integrality);
-			return shouldBe - e <= val && val <= shouldBe + e;
-		}
-
-		private int toBinary(double val) throws IloException {
-			if (hasVal(val, 1)) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-
-		private void printArray(double[] values) {
-			System.out.print("[" + values[0]);
-			for (int i = 1; i < values.length - 1; i++) {
-				System.out.print(", " + values[i]);
-			}
-			System.out.println(", " + values[values.length - 1] + "]");
 		}
 
 	}
@@ -313,8 +289,9 @@ public class CECModel implements Model {
 						this.add(cplex.le(sum, pathEdges.size()));
 
 						counter++;
-						if (counter > 5)
+						if (counter > 5) {
 							break;
+						}
 					}
 				}
 			}

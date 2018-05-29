@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import at.mhofer.mathprog.kmst.data.Instance;
-import at.mhofer.mathprog.kmst.model.CECModel;
 import at.mhofer.mathprog.kmst.model.Model;
 import at.mhofer.mathprog.kmst.model.factory.CECModelFactory;
 import at.mhofer.mathprog.kmst.model.factory.MCFModelFactory;
