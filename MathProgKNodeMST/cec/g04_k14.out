@@ -13,7 +13,7 @@ Clique table members: 404.
 MIP emphasis: balance optimality and feasibility.
 MIP search method: traditional branch-and-cut.
 Parallel mode: none, using 1 thread.
-Root relaxation solution time = 0.00 sec. (4.50 ticks)
+Root relaxation solution time = 0.02 sec. (4.50 ticks)
 
         Nodes                                         Cuts/
    Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
@@ -27,20 +27,20 @@ Root relaxation solution time = 0.00 sec. (4.50 ticks)
       0     0      871.7500    38     3778.0000     Covers: 1      488   76.93%
 *     0+    0                          963.0000      871.7500             9.48%
       0     2      874.3750    45      963.0000      885.0000      488    8.10%                        0             0
-Elapsed time = 0.22 sec. (106.03 ticks, tree = 0.01 MB, solutions = 3)
+Elapsed time = 0.17 sec. (106.08 ticks, tree = 0.01 MB, solutions = 3)
 *     3     3      integral     0      955.0000      892.5000      531    6.54%
 *    11     2      integral     0      917.0000      907.0000      562    1.09%
-*    12     0      integral     0      909.0000      907.0000      566    0.22%
+*    12     0      integral     0      909.0000      907.0000      567    0.22%
 
 Cover cuts applied:  2
 Implied bound cuts applied:  14
 Zero-half cuts applied:  5
 Gomory fractional cuts applied:  2
-User cuts applied:  1
+User cuts applied:  6
 
 Root node processing (before b&c):
-  Real time             =    0.22 sec. (106.04 ticks)
+  Real time             =    0.17 sec. (106.09 ticks)
 Sequential b&c:
-  Real time             =    0.03 sec. (23.27 ticks)
+  Real time             =    0.03 sec. (22.79 ticks)
                           ------------
-Total (root+branch&cut) =    0.25 sec. (129.31 ticks)
+Total (root+branch&cut) =    0.20 sec. (128.87 ticks)

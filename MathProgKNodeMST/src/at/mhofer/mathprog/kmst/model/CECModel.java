@@ -109,9 +109,9 @@ public class CECModel implements Model {
 		// C6: choose k edges and therefore k+1 nodes, which leads to k nodes
 		// without the artificial root node
 		cplex.addEq(cplex.sum(a), k, "C6");
-		
+
 		// backarcs to root = 0
-		for (int i = 0; i < numNodes - 1; i++){
+		for (int i = 0; i < numNodes - 1; i++) {
 			cplex.addEq(0, a[i + numEdges]);
 		}
 
@@ -176,14 +176,80 @@ public class CECModel implements Model {
 		}
 		return outgoingEdges;
 	}
-	
+
 	private class FractionalCuts extends IloCplex.UserCutCallback {
 
 		@Override
 		protected void main() throws IloException {
-			//TODO
+			double[] values = this.getValues(a);
+			Graph<Integer, Edge> graph = new DefaultDirectedWeightedGraph<Integer, Edge>(Edge.class);
+
+			for (int i = 1; i < numNodes; i++) {
+				graph.addVertex(i);
+			}
+
+			List<Edge> generatedEdges = new LinkedList<Edge>();
+
+			for (int i = numNodes - 1; i < numEdges; i++) {
+				Edge e = edges[i];
+				graph.addEdge(e.getV1(), e.getV2(), e);
+				graph.setEdgeWeight(edges[i], 1 - (values[i] > values[i + numEdges] ? 0 : 1));
+				generatedEdges.add(e);
+
+				Edge inve = invEdges[i];
+				graph.addEdge(inve.getV1(), inve.getV2(), inve);
+				graph.setEdgeWeight(invEdges[i], 1 - (values[i + numEdges] > values[i] ? 0 : 1));
+				generatedEdges.add(inve);
+			}
+
+			ShortestPathAlgorithm<Integer, Edge> dijkstra = new DijkstraShortestPath<Integer, Edge>(graph);
+			int counter = 0;
+			for (Edge e : generatedEdges) {
+				GraphPath<Integer, Edge> path = dijkstra.getPath(e.getV2(), e.getV1());
+
+				if (path != null) {
+					double pathWeight = path.getWeight();
+					double edgeWeight = graph.getEdgeWeight(e);
+					List<Edge> pathEdges = path.getEdgeList();
+					if (pathWeight + edgeWeight < 1) {
+						IloLinearIntExpr sum = cplex.linearIntExpr();
+						for (Edge pathEdge : pathEdges) {
+							sum.addTerm(1, arcEdgeMap.get(pathEdge));
+						}
+						sum.addTerm(1, arcEdgeMap.get(e));
+						// this.addLocal(cplex.le(sum, pathEdges.size()));
+						this.add(cplex.le(sum, pathEdges.size()), IloCplex.CutManagement.UseCutFilter);
+						counter++;
+						// break;
+						if (counter > 5)
+							break;
+					}
+				}
+			}
+
 		}
-		
+
+		private boolean hasVal(double val, int shouldBe) throws IloException {
+			double e = cplex.getParam(IloCplex.Param.MIP.Tolerances.Integrality);
+			return shouldBe - e <= val && val <= shouldBe + e;
+		}
+
+		private int toBinary(double val) throws IloException {
+			if (hasVal(val, 1)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+
+		private void printArray(double[] values) {
+			System.out.print("[" + values[0]);
+			for (int i = 1; i < values.length - 1; i++) {
+				System.out.print(", " + values[i]);
+			}
+			System.out.println(", " + values[values.length - 1] + "]");
+		}
+
 	}
 
 	private class CycleElimination extends IloCplex.LazyConstraintCallback {
@@ -192,7 +258,7 @@ public class CECModel implements Model {
 			double e = cplex.getParam(IloCplex.Param.MIP.Tolerances.Integrality);
 			return shouldBe - e <= val && val <= shouldBe + e;
 		}
-		
+
 		private int toBinary(double val) throws IloException {
 			if (hasVal(val, 1)) {
 				return 1;
@@ -211,7 +277,7 @@ public class CECModel implements Model {
 			}
 
 			List<Edge> generatedEdges = new LinkedList<Edge>();
-			
+
 			for (int i = numNodes - 1; i < numEdges; i++) {
 				if (hasVal(values[i], 1) || hasVal(values[i + numEdges], 0)) {
 					Edge e = edges[i];
@@ -229,7 +295,8 @@ public class CECModel implements Model {
 			}
 
 			ShortestPathAlgorithm<Integer, Edge> dijkstra = new DijkstraShortestPath<Integer, Edge>(graph);
-			for (Edge e: generatedEdges) {
+			int counter = 0;
+			for (Edge e : generatedEdges) {
 				GraphPath<Integer, Edge> path = dijkstra.getPath(e.getV2(), e.getV1());
 
 				if (path != null) {
@@ -244,6 +311,10 @@ public class CECModel implements Model {
 						sum.addTerm(1, arcEdgeMap.get(e));
 
 						this.add(cplex.le(sum, pathEdges.size()));
+
+						counter++;
+						if (counter > 5)
+							break;
 					}
 				}
 			}

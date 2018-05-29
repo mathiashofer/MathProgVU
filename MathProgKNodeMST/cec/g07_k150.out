@@ -7,13 +7,13 @@ MIP Presolve eliminated 300 rows and 300 columns.
 MIP Presolve modified 6000 coefficients.
 Reduced MIP has 9302 rows, 9600 columns, and 147650 nonzeros.
 Reduced MIP has 9600 binaries, 0 generals, 0 SOSs, and 0 indicators.
-Presolve time = 0.09 sec. (101.33 ticks)
+Presolve time = 0.11 sec. (101.33 ticks)
 Probing time = 0.02 sec. (5.13 ticks)
 Clique table members: 3301.
 MIP emphasis: balance optimality and feasibility.
 MIP search method: traditional branch-and-cut.
 Parallel mode: none, using 1 thread.
-Root relaxation solution time = 0.47 sec. (347.16 ticks)
+Root relaxation solution time = 0.50 sec. (347.16 ticks)
 
         Nodes                                         Cuts/
    Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
@@ -30,23 +30,25 @@ Root relaxation solution time = 0.47 sec. (347.16 ticks)
       0     0     4525.0000    56                ZeroHalf: 10     6884         
 *     0+    0                         4671.0000     4525.0000             3.13%
       0     2     4525.0000    56     4671.0000     4525.0000     6884    3.13%                        0             0
-Elapsed time = 16.59 sec. (2984.50 ticks, tree = 0.01 MB, solutions = 1)
-      2     4     4531.2500    58     4671.0000     4525.2500     6937    3.12%           x3035 D      2      1      2
-      5     7     4526.0000    52     4671.0000     4526.0000     7015    3.10%           x1447 D      5      3      3
-      9    11     4533.7500    32     4671.0000     4526.0000     7163    3.10%           x2963 U      9      8      6
-*    10     6      integral     0     4534.0000     4526.0000     7167    0.18%
-     16     7     4527.5000    68     4534.0000     4527.5000     7196    0.14%           x8383 D     16     14      7
-     24     6     4528.0000    46     4534.0000     4528.0000     7278    0.13%           x7743 D     24     22     10
-     33     7     4530.0000    58     4534.0000     4529.0000     7331    0.11%           x1739 U     33     32      6
-     45     9     4530.2500    55     4534.0000     4530.0000     7442    0.09%           x3323 D     45     44     18
+Elapsed time = 10.13 sec. (2985.43 ticks, tree = 0.01 MB, solutions = 1)
+      2     4     4531.2500    58     4671.0000     4525.2500     6926    3.12%           x3035 D      2      1      2
+      4     6     4537.7500    15     4671.0000     4526.0000     6984    3.10%           x1447 U      4      3      3
+      8    10     4530.5000    52     4671.0000     4526.0000     7061    3.10%           x1528 N      8      6      5
+*    10     6      integral     0     4534.0000     4526.0000     7161    0.18%
+     13     6     4532.7500    28     4534.0000     4527.5000     7178    0.14%           x5868 U     13     12      6
+     19     8     4528.0000    56     4534.0000     4527.5000     7219    0.14%           x7743 N     19     17      9
+     29     7     4529.0000    66     4534.0000     4528.2500     7319    0.13%           x4120 N     29     28     13
+     42     8     4530.0000    46     4534.0000     4530.0000     7441    0.09%            x809 N     42     41     16
+     49    10     4530.2500    42     4534.0000     4530.0000     7467    0.09%           x5533 N     49     48     23
+     64     4     4531.5000    10     4534.0000     4531.5000     7550    0.06%           x2991 N     64      2      3
 
 Zero-half cuts applied:  27
 Gomory fractional cuts applied:  1
-User cuts applied:  32
+User cuts applied:  35
 
 Root node processing (before b&c):
-  Real time             =   16.56 sec. (2962.44 ticks)
+  Real time             =   10.11 sec. (2963.37 ticks)
 Sequential b&c:
-  Real time             =   17.28 sec. (2368.83 ticks)
+  Real time             =    9.14 sec. (2526.81 ticks)
                           ------------
-Total (root+branch&cut) =   33.84 sec. (5331.27 ticks)
+Total (root+branch&cut) =   19.25 sec. (5490.19 ticks)

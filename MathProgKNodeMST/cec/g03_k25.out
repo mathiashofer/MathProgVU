@@ -1,0 +1,44 @@
+Lazy constraint(s) or lazy constraint callback is present.
+    Disabling dual reductions (CPX_PARAM_REDUCE) in presolve.
+    Disabling non-linear reductions (CPX_PARAM_PRELINEAR) in presolve.
+         Disabling repeat represolve because of lazy constraint/incumbent callback.
+Tried aggregator 1 time.
+MIP Presolve eliminated 50 rows and 50 columns.
+MIP Presolve modified 252 coefficients.
+Reduced MIP has 430 rows, 478 columns, and 2644 nonzeros.
+Reduced MIP has 478 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (2.30 ticks)
+Probing time = 0.00 sec. (0.66 ticks)
+Clique table members: 228.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: traditional branch-and-cut.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (2.98 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
+
+      0     0     2957.3333    32                   2935.0000      290         
+      0     0     2968.5000    20                     Cuts: 8      303         
+      0     0     2972.0000    18                     Cuts: 4      312         
+      0     0     2972.0000    40                 ZeroHalf: 1      313         
+      0     0     2973.3333    49                 ZeroHalf: 3      317         
+*     0+    0                         3115.0000     2973.3333             4.55%
+      0     0     2974.4000    52     3115.0000   ZeroHalf: 9      323    4.51%
+      0     0     2975.3333    36     3115.0000       Cuts: 6      330    4.48%
+      0     0     2975.3333    55     3115.0000   ZeroHalf: 2      332    4.48%
+      0     2     2975.3333    55     3115.0000     2975.3333      332    4.48%                        0             0
+Elapsed time = 0.23 sec. (120.17 ticks, tree = 0.01 MB, solutions = 1)
+*    10     5      integral     0     3088.0000     2983.5000      462    3.38%
+*    32     4      integral     0     3074.0000     2996.2000      600    2.53%
+
+Zero-half cuts applied:  6
+Gomory fractional cuts applied:  2
+User cuts applied:  17
+
+Root node processing (before b&c):
+  Real time             =    0.23 sec. (120.17 ticks)
+Sequential b&c:
+  Real time             =    0.16 sec. (93.07 ticks)
+                          ------------
+Total (root+branch&cut) =    0.39 sec. (213.24 ticks)

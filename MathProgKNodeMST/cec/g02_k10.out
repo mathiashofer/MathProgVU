@@ -13,23 +13,28 @@ Clique table members: 109.
 MIP emphasis: balance optimality and feasibility.
 MIP search method: traditional branch-and-cut.
 Parallel mode: none, using 1 thread.
-Root relaxation solution time = 0.00 sec. (1.05 ticks)
+Root relaxation solution time = 0.00 sec. (0.80 ticks)
 
         Nodes                                         Cuts/
    Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
 
-      0     0      309.3333     6                    309.3333      133         
-*     0+    0                          468.0000      309.3333            33.90%
-      0     0      354.8000    15      468.0000       Cuts: 2      146   24.19%
-*     0     0      integral     0      373.0000       Cuts: 9      154    0.00%
-      0     0        cutoff            373.0000      373.0000      154    0.00%                        0             0
-Elapsed time = 0.03 sec. (7.25 ticks, tree = 0.01 MB, solutions = 3)
+      0     0     1330.3333    22                   1280.0000      102         
+      0     0     1348.0000    20                    Cuts: 11      114         
+      0     0     1386.0000    14                     Cuts: 5      119         
+      0     0     1386.0000    18                     Cuts: 2      122         
+      0     0     1386.0000    18                     Cuts: 2      127         
+*     0+    0                         1641.0000     1386.0000            15.54%
+*     0+    0                         1390.0000     1386.0000             0.29%
+      0     0        cutoff           1390.0000     1386.0000      127    0.29%                        0             0
+Elapsed time = 0.08 sec. (29.47 ticks, tree = 0.01 MB, solutions = 2)
 
-Gomory fractional cuts applied:  5
+Zero-half cuts applied:  1
+Gomory fractional cuts applied:  2
+User cuts applied:  2
 
 Root node processing (before b&c):
-  Real time             =    0.03 sec. (7.25 ticks)
+  Real time             =    0.08 sec. (29.48 ticks)
 Sequential b&c:
   Real time             =    0.00 sec. (0.00 ticks)
                           ------------
-Total (root+branch&cut) =    0.03 sec. (7.25 ticks)
+Total (root+branch&cut) =    0.08 sec. (29.48 ticks)

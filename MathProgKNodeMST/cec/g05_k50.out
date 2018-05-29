@@ -7,13 +7,13 @@ MIP Presolve eliminated 100 rows and 100 columns.
 MIP Presolve modified 600 coefficients.
 Reduced MIP has 1002 rows, 1100 columns, and 6746 nonzeros.
 Reduced MIP has 1100 binaries, 0 generals, 0 SOSs, and 0 indicators.
-Presolve time = 0.00 sec. (4.53 ticks)
+Presolve time = 0.02 sec. (4.53 ticks)
 Probing time = 0.00 sec. (2.16 ticks)
 Clique table members: 401.
 MIP emphasis: balance optimality and feasibility.
 MIP search method: traditional branch-and-cut.
 Parallel mode: none, using 1 thread.
-Root relaxation solution time = 0.02 sec. (10.04 ticks)
+Root relaxation solution time = 0.00 sec. (10.04 ticks)
 
         Nodes                                         Cuts/
    Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap         Variable B NodeID Parent  Depth
@@ -35,18 +35,20 @@ Root relaxation solution time = 0.02 sec. (10.04 ticks)
       0     0     4803.4400    60                 ZeroHalf: 2      718         
 *     0+    0                         5135.0000     4803.4400             6.46%
       0     2     4803.4400    60     5135.0000     4805.7500      718    6.41%                        0             0
-Elapsed time = 0.39 sec. (173.69 ticks, tree = 0.01 MB, solutions = 1)
-*    20    14      integral     0     5131.0000     4809.3333      899    6.27%
-*    36    14      integral     0     4898.0000     4813.7083     1150    1.72%
-     87    38     4856.2000    34     4898.0000     4821.8333     1573    1.56%            x266 U     87     86      7
+Elapsed time = 0.36 sec. (173.85 ticks, tree = 0.01 MB, solutions = 1)
+*    35    22      integral     0     5087.0000     4812.0000     1034    5.41%
+*    60+   18                         4985.0000     4813.8333             3.43%
+     61    21     4848.2500    17     4985.0000     4813.8333     1265    3.43%            x342 N     61     60      8
+*    88    27      integral     0     4898.0000     4817.4444     1477    1.64%
+    341     0        cutoff           4898.0000     4898.0000     3510    0.00%            x326 D    341    188     10
 
 Zero-half cuts applied:  12
 Gomory fractional cuts applied:  2
-User cuts applied:  41
+User cuts applied:  50
 
 Root node processing (before b&c):
-  Real time             =    0.39 sec. (173.70 ticks)
+  Real time             =    0.36 sec. (173.87 ticks)
 Sequential b&c:
-  Real time             =    0.66 sec. (410.36 ticks)
+  Real time             =    0.80 sec. (479.46 ticks)
                           ------------
-Total (root+branch&cut) =    1.05 sec. (584.06 ticks)
+Total (root+branch&cut) =    1.16 sec. (653.33 ticks)

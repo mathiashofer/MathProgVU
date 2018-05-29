@@ -18,11 +18,11 @@ import ilog.concert.IloException;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		Instance instance = Instance.fromFile(new File("data/g06.dat"));
-		Model model = new CECModel(instance, 100);
-		model.build();
-		model.solve();
-//		runCEC();
+//		Instance instance = Instance.fromFile(new File("data/g08.dat"));
+//		Model model = new CECModel(instance, 200);
+//		model.build();
+//		model.solve();
+		runCEC();
 	}
 	
 	private static void runCEC() throws FileNotFoundException, IloException {
