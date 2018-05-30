@@ -49,11 +49,21 @@ Edge selection variables
 Arc selection variables
 \[a_{i j} \in \{0, 1\} \tag*{$(i,j) \in A$}\]
 
+\section{Separation Method}
+
+\subsection{Non-Fractional Case}
+
+The procedure for the non-fractional case is basically the one from the slides. Hence, we are looking for a cycle C s.t. $\Sigma_{(i,j) \in C} (1 - \overline{a}_{i j}) < 1$ where $\overline{a}$ denotes a solution. This is done by building a directed graph with weight $\overline{w}_{i j} = 1 - \overline{a}_{i j}$ for each arc $(i,j) \in A$. Then we are looking for the cheapest path $P$ from $v$ to $u$ for each arc $(u,v) \in A$. If we have found some path s.t. $\Sigma_{(i,j) \in P} \overline{w}_{i j} + \overline{w}_{u v} < 1$ we have identified some a violated cycle and thus add the inequality to our formulation.
+
+\subsection{Fractional Case}
+
+For the fractional case we use the same procedure as above, but with some modifications to the directed graph. Since in the fractional case we have $a_{i j} \in [0, 1]$ and thus for example have $a_{i j} = 1/3$ and $a_{j i} = 2/3$ for some $i,j \in V$. What we do to apply the above procedure is we set $\overline{w}_{i j} = 1 - 1 = 0$ if $a_{i j} < a_{j i}$ and $\overline{w}_{i j} = 1 - 0 = 1$ otherwise. Intuitively, we just select one of the arcs, i.e. the one with the lower value, if we have fractional values $> 0$ for both directions. So basically we just ``guess'' an integer solution, based on the fractional one and then preemptively add cycle elimination inequalities.
+
 \section{Results}
 
 \begin{table}[h!]
 	\centering
-	\label{tab:scf}
+	\label{tab:cec}
 	\begin{tabular}{l|l|l|l|l|l|l}
 		\textbf{}           & $\mathbf{|V|}$      	& \textbf{K} 	& \textbf{Objective} & \textbf{Runtime in Seconds} & \textbf{B\&B Nodes} & \textbf{User Cuts} \\ \hline
 		\multirow{2}{*}{g01}& \multirow{2}{*}{10} 	& 2          	& 46                 & 0.09                        & 0             & 0                          \\
@@ -76,10 +86,12 @@ Arc selection variables
 	\caption{Results on a Intel Core i7-5500U 2.4GHz}
 \end{table}
 
-\section{Separation Method}
-
-
 \section{Interpretation of Results}
 
+In comparison to the compact models, the CEC approach outperforms them quite significantly. The most extreme gap occured on instance g08, for which the SCF formulation ``exploded'' for some reason, s.t. it took over 1 hour to find a solution whereas the CEC approach just takes about 3 minutes. Thus, in percent, the CEC approach takes only 3.93\% percent of the time and only 0.15\% of the B\&B nodes of the SCF formulation. But also for not so extreme instances like g06 it only takes about 1/7th of the time and significantly less B\&B nodes.
+
+The amount of added inequalities during the cycle elimination procedure also has an impact on the runtime. The first implementation just added all found valid inequalities. However, after some experiments we stop the search for further cycles after ~5-6 added inequalities. If we add less then the whole overhead of the graph generation and path search is too high and if we add more then we spend to much time with the current solution. Thus, performance was best with at most ~5-6 added valid inequalities per call.
+
+As for the fractional separation method, it turned out that given two arcs $a_{i j}$ and $a_{j i}$ it works best when we select, i.e. assign the value $1$ to it whereas the inverse becomes $0$, the one with the lower fractional value. This may seem a bit surprising, since this arc may have a lower value because it has less impact on the objective function. However, from my perspective, we try by the selection of the not so promising arc that we preemptively cut off not so promising parts from the search space. For most instances the runtime improvement was not so significant, but for instance g08 it took about a minute less to find a solution with this separation method. As for the amount of added valid inequalities, the same arguments as above apply, thus best results were achieved with a value of at most ~5-6 added valid inequalities per call.
 
 \end{document}
